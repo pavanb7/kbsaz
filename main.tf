@@ -4,16 +4,16 @@ provider "azurerm" {
 }
 
 ## Azure resource group for the kubernetes cluster ##
-resource "azm_kubl" {
+resource "azurerm_resource_group" "pk1s"{
   name     = "${var.resource_group_name}"
   location = "${var.location}"
 }
 
 ## AKS kubernetes cluster ##
-resource "azm_kubl_cluster" { 
+resource "azurerm_kubernetes_cluster" "pkls" { 
   name                = "${var.cluster_name}"
-  resource_group_name = "${azm_kubl_cluster.name}"
-  location            = "${azm_kubl_cluster.location}"
+  resource_group_name = "${azurerm_resource_group.pk1s.name}"
+  location            = "${azurerm_resource_group.pkls.location}"
   dns_prefix          = "${var.dns_prefix}"
 
   linux_profile {
@@ -69,11 +69,11 @@ EOF
 
 
 output "kube_config" {
-  value = azm_kubl_cluster.kube_config_raw
+  value = "${azurerm_kubernetes_cluster.pk1s.kube_config_raw}"
 }
 
 output "host" {
-  value = azm_kubl_cluster.aks_demo.kube_config.0.host
+  value = "${azurerm_kubernetes_cluster.pk1s.kube_config.0.host}"
 }
 
 output "configure" {
